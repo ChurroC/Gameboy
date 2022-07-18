@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Gameboy Player</title>
+    <script defer src="/socket.io/socket.io.js"></script>
+    <script defer src="./script.js"></script>
+    <style>
+        body {
+            text-align: center;
+        }
+        h1 {
+            margin: 0px;
+        }
+        h3 {
+            margin: 0px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Gameboy Player</h1>
+    <h3></h3>
+    <div id="inRoom" style="display: none;">
+    <img id="frame"><br>
+    <input value="ROM" type="file" id="rom" oninput="loadRom()" accept=".gb"><br>
+    <button id="reset" onclick="pauseResume()">Pause/Resume Game</button>
+    <button id="reset" onclick="reset()">Reset Game</button><br>
+    </div>
+    Join a Room: <input type="text" id="room"><button onclick="room()">Submit</button><br>
+    Join a room to start playing. If your friend joins the same room he can play along or watch.
+</body>
+</html>

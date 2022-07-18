@@ -1,0 +1,23 @@
+{
+  "name": "gameboy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@socket.io/admin-ui": "^0.4.0",
+    "canvas": "^2.9.3",
+    "express": "^4.18.1",
+    "path": "^0.12.7",
+    "serverboy": "^0.0.7",
+    "socket.io": "^4.5.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
+}
