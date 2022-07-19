@@ -1,7 +1,8 @@
 const socket = io()
 
 socket.on('frame', frame => {
-    document.getElementById("frame").src = frame;
+    document.getElementById("frame").src = frame.frame;
+    console.log(frame.room)
 })
 
 function loadRom() {
@@ -15,6 +16,10 @@ function pauseResume() {
 function reset() {
     socket.emit('reset')
 }
+
+socket.on('hu', frame => {
+    //console.log(frame)
+})
 
 function room() {
     const room = document.getElementById("room").value

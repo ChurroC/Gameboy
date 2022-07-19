@@ -10,33 +10,34 @@ const io = require('socket.io')({
 const rom = fs.readFileSync('./Super_Mario_Land.gb')
 
 const rooms = {}
+let i = 0
 
 io.on('connection', socket => {
-    let currentRoom
+    let currentRoom = socket.id
 
     socket.on('room', room => {
-        socket.join(room)
         socket.leave(currentRoom)
+        socket.join(room)
+        currentRoom = room
         if (!rooms[room]) {
+            console.log(room)
             rooms[room] = {keysToPress: []}
-            currentRoom = room
             rooms[room].gameboy = new Gameboy(rom, 60, 250)
             rooms[room].gameboy.run(frame => {
-                console.log(currentRoom)
-                io.to(currentRoom).emit('frame', frame)
+                //console.log(currentRoom)
+                frame = {
+                    frame: frame,
+                    room: room
+                }
+                io.to(room).emit('frame', frame)
             }, gameboy => {
-                gameboy.pressKeys(rooms[room].keysToPress)
+                rooms[room] ? gameboy.pressKeys(rooms[room].keysToPress) : null//console.log(`${room} is not in the rooms object`)
             })
-        } else {
-            currentRoom = room
-            socket.join(room)
         }
     })
 
     socket.on('keydown', key => {
-        console.log(key)
         if (!rooms[currentRoom]) return
-        console.log(key)
         if (!rooms[currentRoom].keysToPress.includes(key)) {
             rooms[currentRoom].keysToPress.push(key)
         }
@@ -61,10 +62,12 @@ io.on('connection', socket => {
 
     
     setInterval(() => {
-        console.log(io.sockets.adapter.rooms)
-        //console.log(rooms[currentRoom])
+        console.log(socket.rooms)
+        console.log(Object.keys(rooms))
+        //console.log(`between${i++}`)
+        //console.log(io.sockets.adapter.rooms[currentRoom])
         //console.log(rooms[currentRoom] ? rooms[currentRoom].keysToPress : 'no room')
-    }, 1000);
+    }, 3500);
 })
 
 module.exports = io
