@@ -10,28 +10,22 @@ const io = require('socket.io')({
 const rom = fs.readFileSync('./Super_Mario_Land.gb')
 
 const rooms = {}
-let i = 0
 
 io.on('connection', socket => {
     let currentRoom = socket.id
 
-    socket.on('room', room => {
+    socket.on('room', data => {
+        const room = data.room
         socket.leave(currentRoom)
         socket.join(room)
         currentRoom = room
         if (!rooms[room]) {
-            console.log(room)
             rooms[room] = {keysToPress: []}
-            rooms[room].gameboy = new Gameboy(rom, 60, 250)
+            rooms[room].gameboy = new Gameboy(rom, data.fps, data.tickrate)
             rooms[room].gameboy.run(frame => {
-                //console.log(currentRoom)
-                frame = {
-                    frame: frame,
-                    room: room
-                }
                 io.to(room).emit('frame', frame)
             }, gameboy => {
-                rooms[room] ? gameboy.pressKeys(rooms[room].keysToPress) : null//console.log(`${room} is not in the rooms object`)
+                rooms[room] ? gameboy.pressKeys(rooms[room].keysToPress) : null
             })
         }
     })
@@ -49,6 +43,17 @@ io.on('connection', socket => {
         }
     })
 
+    socket.on('tickrate', tickrate => {
+        console.log('tickrate')
+        console.log(tickrate)
+        rooms[currentRoom].gameboy.tickrate = tickrate
+    })
+    socket.on('fps', fps => {
+        console.log(fps)
+        rooms[currentRoom].gameboy.fps = fps
+        console.log(rooms[currentRoom].gameboy._fps)
+    })
+
     socket.on('loadRom', rom => {
         rooms[currentRoom].gameboy.loadRom(rom)
     })
@@ -58,16 +63,6 @@ io.on('connection', socket => {
     socket.on('reset', () => {
         rooms[currentRoom].gameboy.reset()
     })
-
-
-    
-    setInterval(() => {
-        console.log(socket.rooms)
-        console.log(Object.keys(rooms))
-        //console.log(`between${i++}`)
-        //console.log(io.sockets.adapter.rooms[currentRoom])
-        //console.log(rooms[currentRoom] ? rooms[currentRoom].keysToPress : 'no room')
-    }, 3500);
 })
 
 module.exports = io

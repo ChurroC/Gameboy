@@ -17,19 +17,27 @@
         h3 {
             margin: 0px;
         }
+        th{
+            font-weight: normal;
+        }
     </style>
 </head>
 
 <body>
     <h1>Gameboy Player</h1>
     <h3></h3>
-    <div id="inRoom" style="display: none;">
-    <img id="frame"><br>
-    <input value="ROM" type="file" id="rom" oninput="loadRom()" accept=".gb"><br>
-    <button id="reset" onclick="pauseResume()">Pause/Resume Game</button>
-    <button id="reset" onclick="reset()">Reset Game</button><br>
+    <div id="settings" style="display: none;">
+        FPS: <input type="number" id="fps"  min="1" max="500" value="60">
+        Tickrate: <input type="number" id="tickrate" min="1" max="2000" value="250">
+        <button id="start" onclick="room()">Start</button>
     </div>
-    Join a Room: <input type="text" id="room"><button onclick="room()">Submit</button><br>
+    <div id="inRoom" style="display: none;">
+        <img id="frame"><br>
+        <input value="ROM" type="file" id="rom" oninput="loadRom()" accept=".gb"><br>
+        <button id="reset" onclick="reset()">Reset Game</button>
+        <button id="reset" onclick="pauseResume()">Pause/Resume Game</button>
+    </div><br>
+    Join a Room: <input type="text" id="room"><button onclick="setting()">Submit</button><br>
     Join a room to start playing. If your friend joins the same room he can play along or watch.
 </body>
 </html>

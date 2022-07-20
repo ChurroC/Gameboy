@@ -1,8 +1,7 @@
 const socket = io()
 
 socket.on('frame', frame => {
-    document.getElementById("frame").src = frame.frame;
-    console.log(frame.room)
+    document.getElementById("frame").src = frame;
 })
 
 function loadRom() {
@@ -14,18 +13,25 @@ function pauseResume() {
 }
 
 function reset() {
+    setting()
     socket.emit('reset')
 }
 
-socket.on('hu', frame => {
-    //console.log(frame)
-})
+function setting() {
+    document.querySelector("h3").innerText = `In Room: ${document.getElementById("room").value}`
+    document.getElementById("inRoom").style.display = "none"
+    document.getElementById("settings").style.display = "inline-block"
+}
 
 function room() {
-    const room = document.getElementById("room").value
-    socket.emit('room', room)
-    document.querySelector("h3").innerText = `In Room: ${room}`
-    document.getElementById("inRoom").style.display = "block"
+    const data = {
+        room: document.getElementById("room").value,
+        tickrate: document.getElementById("tickrate").value,
+        fps: document.getElementById("fps").value
+    }
+    socket.emit('room', data)
+    document.getElementById("settings").style.display = "none"
+    document.getElementById("inRoom").style.display = "inline-block"
 
     document.addEventListener('keydown', key => {
         const keyMap = {
